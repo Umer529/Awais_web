@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { useLanguage } from "../context/LanguageContext";
+import Logo from "./Logo";
 
 export default function Navbar() {
   const { t, lang, toggleLanguage, isRTL } = useLanguage();
@@ -55,21 +55,11 @@ export default function Navbar() {
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "10px",
+            gap: "12px",
             textDecoration: "none",
           }}
         >
-          <Image
-            src="/logo.png"
-            alt="Al Sheikh Cooling Center"
-            width={44}
-            height={44}
-            style={{
-              borderRadius: "50%",
-              objectFit: "cover",
-              border: "1.5px solid var(--primary-blue)",
-            }}
-          />
+          <Logo size={42} variant="navy" />
           <div>
             <div
               style={{

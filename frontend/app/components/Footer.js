@@ -1,6 +1,6 @@
 "use client";
-import Image from "next/image";
 import { useLanguage } from "../context/LanguageContext";
+import Logo from "./Logo";
 
 export default function Footer() {
   const { t, isRTL } = useLanguage();
@@ -29,21 +29,11 @@ export default function Footer() {
               style={{
                 display: "flex",
                 alignItems: "center",
-                gap: "10px",
+                gap: "12px",
                 marginBottom: "16px",
               }}
             >
-              <Image
-                src="/logo.png"
-                alt="Al Sheikh Cooling Center"
-                width={44}
-                height={44}
-                style={{
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  border: "2px solid #ffffff",
-                }}
-              />
+              <Logo size={44} variant="navy" />
               <div>
                 <div style={{ fontSize: "1.1rem", fontWeight: 800, color: "#ffffff" }}>
                   {t.nav.brand}
@@ -54,9 +44,17 @@ export default function Footer() {
               </div>
             </div>
 
-            <p style={{ fontSize: "0.88rem", color: "#cbd5e1", lineHeight: 1.7, maxWidth: "300px" }}>
+            <p style={{ fontSize: "0.88rem", color: "#cbd5e1", lineHeight: 1.7, maxWidth: "300px", marginBottom: "12px" }}>
               {t.footer.brandDesc}
             </p>
+
+            <div style={{ fontSize: "0.82rem", color: "#93c5fd", display: "flex", alignItems: "flex-start", gap: "6px" }}>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginTop: "2px", flexShrink: 0 }}>
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                <circle cx="12" cy="10" r="3" />
+              </svg>
+              <span>{t.footer.address}</span>
+            </div>
           </div>
 
           {/* Quick Navigation */}

@@ -3,10 +3,10 @@ import Image from "next/image";
 import { useLanguage } from "../context/LanguageContext";
 
 const serviceImages = {
-  ac: "/ac-service.jpg",
-  fridge: "/refrigerator-service.jpg",
-  washer: "/washing-machine-service.jpg",
-  oven: "/oven-service.jpg",
+  ac: "/ac-service-gulf.jpg",
+  fridge: "/refrigerator-service-gulf.jpg",
+  washer: "/washing-machine-service-gulf.jpg",
+  oven: "/oven-service-gulf.jpg",
 };
 
 export default function Services() {
@@ -42,10 +42,32 @@ export default function Services() {
               fontSize: "1.05rem",
               color: "var(--text-muted)",
               lineHeight: 1.7,
+              marginBottom: "20px",
             }}
           >
             {t.services.description}
           </p>
+
+          {/* Section-level SAR 50 Inspection Banner (P1.9) */}
+          <div
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "8px",
+              padding: "8px 18px",
+              backgroundColor: "var(--bg-slate)",
+              border: "1px solid var(--border-light)",
+              borderRadius: "var(--radius-full)",
+              fontSize: "0.85rem",
+              fontWeight: 700,
+              color: "var(--primary-blue-dark)",
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
+            <span>{t.services.inspectionBanner}</span>
+          </div>
         </div>
 
         {/* Services Grid */}
@@ -60,8 +82,8 @@ export default function Services() {
             const imgPath = serviceImages[srv.id] || "/ac-service.jpg";
             const waMsg =
               lang === "ar"
-                ? `السلام عليكم، أحتاج حجز موعد صيانة لخدمة: (${srv.title}). أرجو التواصل معي بالدمام/الخبر.`
-                : `Hello, I would like to book a service for: ${srv.title}. Please contact me for dispatch in Dammam/Khobar.`;
+                ? `السلام عليكم، أحتاج حجز موعد صيانة لخدمة: (${srv.title}). أرجو التواصل معي بالدمام/الظهران.`
+                : `Hello, I would like to book a service for: ${srv.title}. Please contact me for dispatch in Dammam/Dhahran.`;
 
             return (
               <div
@@ -71,10 +93,11 @@ export default function Services() {
                   display: "flex",
                   flexDirection: "column",
                   overflow: "hidden",
+                  height: "100%",
                 }}
               >
                 {/* Service Image */}
-                <div style={{ position: "relative", height: "180px", width: "100%" }}>
+                <div style={{ position: "relative", height: "190px", width: "100%" }}>
                   <Image
                     src={imgPath}
                     alt={srv.title}
@@ -87,20 +110,28 @@ export default function Services() {
                       position: "absolute",
                       bottom: "10px",
                       insetInlineEnd: "10px",
-                      backgroundColor: "rgba(15, 23, 42, 0.8)",
+                      backgroundColor: "rgba(11, 79, 138, 0.9)",
+                      backdropFilter: "blur(4px)",
                       color: "#ffffff",
                       fontSize: "0.75rem",
                       fontWeight: 700,
-                      padding: "4px 8px",
+                      padding: "4px 10px",
                       borderRadius: "var(--radius-sm)",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
                     }}
                   >
-                    ⚡ {srv.speed}
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                    <span>{srv.speed}</span>
                   </div>
                 </div>
 
                 {/* Content */}
-                <div style={{ padding: "20px", display: "flex", flexDirection: "column", flexGrow: 1 }}>
+                <div style={{ padding: "22px 20px", display: "flex", flexDirection: "column", flexGrow: 1 }}>
                   <div
                     style={{
                       display: "flex",
@@ -143,26 +174,54 @@ export default function Services() {
                       gap: "10px",
                     }}
                   >
+                    {/* Redesigned Clean Estimated Cost Banner - Zero overlap */}
                     <div
                       style={{
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
-                        fontSize: "0.82rem",
+                        backgroundColor: "#f0fdf4",
+                        border: "1px solid #bbf7d0",
+                        borderRadius: "var(--radius-md)",
+                        padding: "8px 12px",
+                        gap: "8px",
                       }}
                     >
-                      <span style={{ color: "var(--text-subtle)", fontWeight: 600 }}>
-                        {t.services.inspectionLabel || (isRTL ? "الفحص المبدئي" : "Initial Inspection")}
-                      </span>
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <span
+                          style={{
+                            fontSize: "0.72rem",
+                            color: "#166534",
+                            fontWeight: 700,
+                            letterSpacing: "0.3px",
+                            textTransform: "uppercase",
+                          }}
+                        >
+                          {isRTL ? "متوسط التكلفة" : "Estimated Cost"}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: "0.98rem",
+                            fontWeight: 800,
+                            color: "#15803d",
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {srv.price.replace("Typical: ", "").replace("الأسعار المعتادة: ", "")}
+                        </span>
+                      </div>
                       <span
-                        className="pill-price"
                         style={{
+                          fontSize: "0.72rem",
+                          fontWeight: 700,
+                          color: "#166534",
+                          backgroundColor: "#dcfce7",
+                          padding: "3px 8px",
+                          borderRadius: "var(--radius-full)",
                           whiteSpace: "nowrap",
-                          fontSize: "0.85rem",
-                          fontWeight: 800,
                         }}
                       >
-                        {srv.price}
+                        {isRTL ? "سعر عادل" : "Fair Price"}
                       </span>
                     </div>
 

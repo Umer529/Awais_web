@@ -46,6 +46,7 @@ export default function Contact() {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
             gap: "24px",
+            marginBottom: "40px",
           }}
         >
           {/* Direct Phone Call Card */}
@@ -147,7 +148,7 @@ export default function Contact() {
             </a>
           </div>
 
-          {/* Workshop & Service Area Card */}
+          {/* Workshop & Real Address Card */}
           <div
             className="pro-card"
             style={{
@@ -165,7 +166,7 @@ export default function Contact() {
                 width: "60px",
                 height: "60px",
                 borderRadius: "50%",
-                backgroundColor: "var(--bg-slate-subtle)",
+                backgroundColor: "var(--primary-blue-light)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -182,24 +183,88 @@ export default function Contact() {
               {t.contact.shopCardTitle}
             </h3>
 
-            <p style={{ fontSize: "0.92rem", color: "var(--text-muted)", lineHeight: 1.6 }}>
+            <div style={{ fontSize: "0.92rem", fontWeight: 700, color: "var(--primary-blue-dark)" }}>
+              📍 {t.contact.shopAddress}
+            </div>
+
+            <p style={{ fontSize: "0.88rem", color: "var(--text-muted)", lineHeight: 1.6 }}>
               {t.contact.shopCardDesc}
             </p>
 
             <div
               style={{
                 marginTop: "auto",
-                padding: "8px 12px",
+                padding: "10px 14px",
                 backgroundColor: "var(--bg-slate)",
                 borderRadius: "var(--radius-sm)",
-                fontSize: "0.85rem",
+                fontSize: "0.82rem",
                 fontWeight: 600,
                 color: "var(--text-muted)",
                 width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
               }}
             >
-              🕒 {t.contact.hours}
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              <span>{t.contact.hours}</span>
             </div>
+          </div>
+        </div>
+
+        {/* Embedded Google Map */}
+        <div
+          className="pro-card"
+          style={{
+            overflow: "hidden",
+            backgroundColor: "#ffffff",
+            border: "1px solid var(--border-light)",
+            borderRadius: "var(--radius-lg)",
+            boxShadow: "var(--shadow-card)",
+          }}
+        >
+          <div
+            style={{
+              padding: "16px 20px",
+              borderBottom: "1px solid var(--border-light)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              flexWrap: "wrap",
+              gap: "10px",
+              backgroundColor: "var(--bg-slate-subtle)",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <span style={{ color: "var(--primary-blue)", display: "flex" }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+                  <circle cx="12" cy="10" r="3" />
+                </svg>
+              </span>
+              <span style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--text-main)" }}>
+                {isRTL ? "مقر الورشة وتغطية الخدمة بالدمام والظهران" : "Service Workshop & Rapid Coverage (Dammam & Dhahran)"}
+              </span>
+            </div>
+            <span style={{ fontSize: "0.82rem", color: "var(--text-subtle)", fontWeight: 600 }}>
+              {isRTL ? "١٨ شارع السوق، الدمام ٣٢٢٤٢" : "18th St, Al Souq, Dammam 32242"}
+            </span>
+          </div>
+          <div style={{ position: "relative", width: "100%", height: "340px" }}>
+            <iframe
+              title="Al Sheikh Cooling Center Location Map"
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d114389.2848243615!2d50.045050518349275!3d26.432800539358245!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e49e29a997ef2b7%3A0x867083049d53c2ee!2sDammam%20Saudi%20Arabia!5e0!3m2!1sen!2ssa!4v1710500000000!5m2!1sen!2ssa"
+            />
           </div>
         </div>
       </div>
