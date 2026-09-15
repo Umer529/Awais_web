@@ -1,62 +1,43 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-
-const navLinks = [
-  { label: "Home", href: "#home" },
-  { label: "Services", href: "#services" },
-  { label: "Why Us", href: "#why-us" },
-  { label: "Testimonials", href: "#testimonials" },
-  { label: "Contact", href: "#contact" },
-];
+import { useLanguage } from "../context/LanguageContext";
 
 export default function Navbar() {
+  const { t, lang, toggleLanguage, isRTL } = useLanguage();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
 
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-
-      const sections = navLinks.map((l) => l.href.replace("#", ""));
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sections[i]);
-        if (el && el.getBoundingClientRect().top <= 150) {
-          setActiveSection(sections[i]);
-          break;
-        }
-      }
+      setScrolled(window.scrollY > 20);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavClick = (href) => {
-    setMobileOpen(false);
-    const el = document.querySelector(href);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
-  };
+  const navLinks = [
+    { label: t.nav.home, href: "#home" },
+    { label: t.nav.services, href: "#services" },
+    { label: t.nav.whyUs, href: "#why-us" },
+    { label: t.nav.reviews, href: "#reviews" },
+    { label: t.nav.contact, href: "#contact" },
+  ];
 
   return (
-    <nav
-      id="navbar"
+    <header
+      id="site-header"
       style={{
         position: "fixed",
         top: 0,
         left: 0,
         right: 0,
         zIndex: 1000,
-        padding: scrolled ? "12px 0" : "20px 0",
-        background: scrolled
-          ? "rgba(3, 3, 3, 0.85)"
-          : "transparent",
-        backdropFilter: scrolled ? "blur(20px)" : "none",
-        WebkitBackdropFilter: scrolled ? "blur(20px)" : "none",
-        borderBottom: scrolled
-          ? "1px solid rgba(212, 150, 14, 0.1)"
-          : "1px solid transparent",
-        transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+        backgroundColor: scrolled ? "rgba(255, 255, 255, 0.98)" : "#ffffff",
+        backdropFilter: "blur(12px)",
+        borderBottom: "1px solid var(--border-light)",
+        boxShadow: scrolled ? "var(--shadow-sm)" : "none",
+        transition: "all 0.2s ease",
       }}
     >
       <div
@@ -65,211 +46,193 @@ export default function Navbar() {
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
+          height: "72px",
         }}
       >
-        {/* Logo */}
+        {/* Brand */}
         <a
           href="#home"
-          onClick={(e) => {
-            e.preventDefault();
-            handleNavClick("#home");
-          }}
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "12px",
-            cursor: "pointer",
+            gap: "10px",
+            textDecoration: "none",
           }}
         >
           <Image
             src="/logo.png"
             alt="Al Sheikh Cooling Center"
-            width={48}
-            height={48}
+            width={44}
+            height={44}
             style={{
               borderRadius: "50%",
               objectFit: "cover",
-              border: "2px solid var(--gold-600)",
+              border: "1.5px solid var(--primary-blue)",
             }}
           />
           <div>
             <div
               style={{
-                fontFamily: "var(--font-heading)",
-                fontSize: "1.15rem",
-                fontWeight: 700,
-                color: "#fff",
-                lineHeight: 1.2,
+                fontSize: "1.1rem",
+                fontWeight: 800,
+                color: "var(--primary-blue)",
+                lineHeight: 1.1,
               }}
             >
-              Al Sheikh
+              {t.nav.brand}
             </div>
             <div
               style={{
-                fontSize: "0.65rem",
+                fontSize: "0.72rem",
                 fontWeight: 600,
-                letterSpacing: "2px",
-                textTransform: "uppercase",
-                color: "var(--gold-400)",
+                color: "var(--text-subtle)",
               }}
             >
-              Cooling Center
+              {t.nav.subBrand}
             </div>
           </div>
         </a>
 
-        {/* Desktop Nav */}
-        <div
+        {/* Desktop Nav Links */}
+        <nav
+          className="desktop-nav"
           style={{
             display: "flex",
             alignItems: "center",
-            gap: "32px",
+            gap: "24px",
           }}
-          className="desktop-nav"
         >
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavClick(link.href);
-              }}
               style={{
-                fontSize: "0.88rem",
-                fontWeight: 500,
-                color:
-                  activeSection === link.href.replace("#", "")
-                    ? "var(--gold-400)"
-                    : "var(--dark-100)",
-                transition: "color 0.3s",
-                position: "relative",
-                cursor: "pointer",
+                fontSize: "0.92rem",
+                fontWeight: 600,
+                color: "var(--text-muted)",
+                transition: "color 0.2s ease",
               }}
-              onMouseEnter={(e) =>
-                (e.target.style.color = "var(--gold-400)")
-              }
-              onMouseLeave={(e) =>
-                (e.target.style.color =
-                  activeSection === link.href.replace("#", "")
-                    ? "var(--gold-400)"
-                    : "var(--dark-100)")
-              }
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--primary-blue)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
             >
               {link.label}
             </a>
           ))}
-          <a
-            href="https://wa.me/message/UZNK27G2N6CIG1"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-primary"
-            style={{ padding: "10px 24px", fontSize: "0.85rem" }}
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-            </svg>
-            Book Now
-          </a>
-        </div>
+        </nav>
 
-        {/* Mobile Hamburger */}
-        <button
-          id="mobile-menu-toggle"
-          className="mobile-toggle"
-          onClick={() => setMobileOpen(!mobileOpen)}
+        {/* Right Actions: Phone + Language Toggle + WhatsApp */}
+        <div
           style={{
-            display: "none",
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
-            padding: "8px",
-            flexDirection: "column",
-            gap: "5px",
+            display: "flex",
+            alignItems: "center",
+            gap: "12px",
           }}
         >
-          <span
-            style={{
-              display: "block",
-              width: "24px",
-              height: "2px",
-              background: "var(--gold-400)",
-              transition: "all 0.3s",
-              transform: mobileOpen ? "rotate(45deg) translate(5px, 5px)" : "none",
-            }}
-          />
-          <span
-            style={{
-              display: "block",
-              width: "24px",
-              height: "2px",
-              background: "var(--gold-400)",
-              transition: "all 0.3s",
-              opacity: mobileOpen ? 0 : 1,
-            }}
-          />
-          <span
-            style={{
-              display: "block",
-              width: "24px",
-              height: "2px",
-              background: "var(--gold-400)",
-              transition: "all 0.3s",
-              transform: mobileOpen ? "rotate(-45deg) translate(5px, -5px)" : "none",
-            }}
-          />
-        </button>
-      </div>
+          {/* Language Toggle */}
+          <button
+            onClick={toggleLanguage}
+            className="btn-lang-toggle"
+            title="Change language / تغيير اللغة"
+            aria-label="Toggle language"
+          >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+            <span>{t.nav.langToggle}</span>
+          </button>
 
-      {/* Mobile Menu */}
-      <div
-        id="mobile-menu"
-        style={{
-          display: mobileOpen ? "flex" : "none",
-          flexDirection: "column",
-          padding: "20px 24px",
-          gap: "16px",
-          background: "rgba(3, 3, 3, 0.95)",
-          backdropFilter: "blur(20px)",
-          borderTop: "1px solid rgba(212, 150, 14, 0.1)",
-        }}
-      >
-        {navLinks.map((link) => (
+          {/* Direct Call Button (Desktop) */}
           <a
-            key={link.href}
-            href={link.href}
-            onClick={(e) => {
-              e.preventDefault();
-              handleNavClick(link.href);
-            }}
+            href="tel:+966556906093"
+            className="btn btn-primary-call desktop-call-btn"
             style={{
-              fontSize: "1rem",
-              fontWeight: 500,
-              color:
-                activeSection === link.href.replace("#", "")
-                  ? "var(--gold-400)"
-                  : "var(--dark-100)",
-              padding: "8px 0",
-              borderBottom: "1px solid rgba(255,255,255,0.05)",
+              padding: "9px 16px",
+              fontSize: "0.88rem",
             }}
           >
-            {link.label}
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg>
+            <span>{t.nav.callUs}</span>
           </a>
-        ))}
-        <a
-          href="https://wa.me/message/UZNK27G2N6CIG1"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn btn-primary"
-          style={{ textAlign: "center", marginTop: "8px" }}
-        >
-          Book on WhatsApp
-        </a>
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="mobile-toggle"
+            aria-label="Toggle navigation menu"
+            style={{
+              display: "none",
+              background: "transparent",
+              border: "1px solid var(--border-light)",
+              borderRadius: "var(--radius-sm)",
+              padding: "7px 10px",
+              cursor: "pointer",
+              color: "var(--text-main)",
+            }}
+          >
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              {mobileOpen ? (
+                <path d="M18 6L6 18M6 6l12 12" />
+              ) : (
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+        </div>
       </div>
 
+      {/* Mobile Drawer Menu */}
+      {mobileOpen && (
+        <div
+          style={{
+            backgroundColor: "#ffffff",
+            borderBottom: "1px solid var(--border-light)",
+            padding: "16px 20px 24px",
+            display: "flex",
+            flexDirection: "column",
+            gap: "14px",
+            boxShadow: "var(--shadow-card)",
+          }}
+        >
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setMobileOpen(false)}
+              style={{
+                fontSize: "1rem",
+                fontWeight: 600,
+                color: "var(--text-main)",
+                padding: "8px 0",
+                borderBottom: "1px solid var(--bg-slate-subtle)",
+              }}
+            >
+              {link.label}
+            </a>
+          ))}
+
+          <a
+            href="tel:+966556906093"
+            className="btn btn-primary-call"
+            style={{ width: "100%", justifyContent: "center" }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+            </svg>
+            {t.nav.callUs}
+          </a>
+        </div>
+      )}
+
       <style jsx>{`
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
           .desktop-nav {
+            display: none !important;
+          }
+          .desktop-call-btn {
             display: none !important;
           }
           .mobile-toggle {
@@ -277,6 +240,6 @@ export default function Navbar() {
           }
         }
       `}</style>
-    </nav>
+    </header>
   );
 }

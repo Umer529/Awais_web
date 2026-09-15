@@ -1,5 +1,6 @@
-import { Inter, Playfair_Display } from "next/font/google";
+import { Inter, Tajawal } from "next/font/google";
 import "./globals.css";
+import { LanguageProvider } from "./context/LanguageContext";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -7,40 +8,41 @@ const inter = Inter({
   display: "swap",
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
+const tajawal = Tajawal({
+  variable: "--font-tajawal",
+  subsets: ["arabic", "latin"],
+  weight: ["400", "500", "700", "800"],
   display: "swap",
 });
 
 export const metadata = {
-  title: "Al Sheikh Cooling Center | Premium AC, Washing Machine & Refrigerator Services",
+  title: "مركز الشيخ لصيانة الأجهزة والتكييف بالدمام والخبر | Al Sheikh Cooling & Appliance Repair",
   description:
-    "Al Sheikh Cooling Center — your trusted partner for expert AC installation, repair, washing machine service, and refrigerator maintenance. Book now on WhatsApp for same-day service.",
+    "صيانة سريعة وفورية للمكيفات، الثلاجات، الغسالات والأفران بالدمام والخبر. وصول خلال 40 دقيقة، قطع غيار أصلية وضمان 30 يوماً. فحص يبدأ من 50 ريال. Emergency home appliance repair in Dammam & Khobar.",
   keywords: [
-    "AC repair",
-    "washing machine service",
-    "refrigerator repair",
-    "cooling center",
-    "HVAC service",
-    "Al Sheikh",
-    "appliance repair",
+    "صيانة مكيفات الدمام",
+    "تصليح ثلاجات الدمام",
+    "صيانة غسالات الخبر",
+    "تصليح أفران",
+    "تعبئة فريون الدمام",
+    "AC repair Dammam",
+    "refrigerator repair Khobar",
+    "washing machine repair",
+    "Al Sheikh Cooling",
   ],
   openGraph: {
-    title: "Al Sheikh Cooling Center",
-    description:
-      "Premium cooling & appliance services. Expert installation, repair & maintenance.",
+    title: "مركز الشيخ لصيانة الأجهزة والتكييف | Al Sheikh Cooling",
+    description: "خدمة صيانة منزلية فورية وموثوقة بالدمام والخبر. وصول خلال 40 دقيقة وضمان معتمد.",
     type: "website",
   },
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html
-      lang="en"
-      className={`${inter.variable} ${playfair.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="en" dir="ltr" className={`${inter.variable} ${tajawal.variable} h-full antialiased`}>
+      <body className="min-h-full flex flex-col bg-slate-50 text-slate-900 selection:bg-blue-600 selection:text-white">
+        <LanguageProvider>{children}</LanguageProvider>
+      </body>
     </html>
   );
 }

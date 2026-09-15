@@ -1,265 +1,523 @@
 "use client";
+import { useState } from "react";
 import Image from "next/image";
+import { useLanguage } from "../context/LanguageContext";
 
 export default function Hero() {
+  const { t, lang, isRTL } = useLanguage();
+  const [selectedAppliance, setSelectedAppliance] = useState("ac");
+  // Default is empty array (no options marked by default)
+  const [selectedFaults, setSelectedFaults] = useState([]);
+
+  const faultsList = t.diagnostic.faults[selectedAppliance] || t.diagnostic.faults.ac;
+  const applianceName = t.diagnostic.appliances[selectedAppliance];
+
+  const handleApplianceChange = (key) => {
+    setSelectedAppliance(key);
+    setSelectedFaults([]); // Reset issue selection on appliance switch
+  };
+
+  const handleToggleFault = (faultId) => {
+    setSelectedFaults((prev) =>
+      prev.includes(faultId)
+        ? prev.filter((id) => id !== faultId)
+        : [...prev, faultId]
+    );
+  };
+
+  // Build professional WhatsApp message
+  const selectedFaultLabels = faultsList
+    .filter((f) => selectedFaults.includes(f.id))
+    .map((f) => f.label);
+
+  let waMessage = "";
+  if (lang === "ar") {
+    if (selectedFaultLabels.length > 0) {
+      const issuesList = selectedFaultLabels.map((lbl) => `• ${lbl}`).join("\n");
+      waMessage = `السلام عليكم - مركز الشيخ للصيانة،\nأحتاج خدمة صيانة منزلية لجهاز: *${applianceName}*.\n\nالأعطال المحددة:\n${issuesList}\n\n📍 الموقع: الدمام / الخبر\nأرجو تأكيد موعد توفر الفني.`;
+    } else {
+      waMessage = `السلام عليكم - مركز الشيخ للصيانة،\nأحتاج فحص وصيانة منزلية لجهاز: *${applianceName}* بالدمام / الخبر.\n\nأرجو تأكيد موعد وصول الفني.`;
+    }
+  } else {
+    if (selectedFaultLabels.length > 0) {
+      const issuesList = selectedFaultLabels.map((lbl) => `• ${lbl}`).join("\n");
+      waMessage = `Hello Al Sheikh Cooling Center,\nI need repair service for my *${applianceName}*.\n\nReported Issues:\n${issuesList}\n\n📍 Location: Dammam / Khobar\nPlease confirm available technician dispatch.`;
+    } else {
+      waMessage = `Hello Al Sheikh Cooling Center,\nI would like to request an on-site inspection & repair service for my *${applianceName}* in Dammam / Khobar.\n\nPlease confirm available technician dispatch.`;
+    }
+  }
+
   return (
     <section
       id="home"
       style={{
+        paddingTop: "108px",
+        paddingBottom: "60px",
+        backgroundColor: "var(--bg-slate)",
+        borderBottom: "1px solid var(--border-light)",
         position: "relative",
-        minHeight: "100vh",
-        display: "flex",
-        alignItems: "center",
-        overflow: "hidden",
-        paddingTop: "100px",
       }}
     >
-      {/* Background Image */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 0,
-        }}
-      >
-        <Image
-          src="/hero-technician.jpg"
-          alt="Professional HVAC service"
-          fill
-          style={{ objectFit: "cover", objectPosition: "center" }}
-          priority
-          quality={90}
-        />
+      <div className="container">
+        {/* Top Trust Banner / Location Pill */}
         <div
           style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(135deg, rgba(3,3,3,0.94) 0%, rgba(3,3,3,0.75) 40%, rgba(3,3,3,0.88) 100%)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "12px",
+            marginBottom: "28px",
           }}
-        />
-      </div>
-
-      {/* Decorative Elements */}
-      <div
-        style={{
-          position: "absolute",
-          top: "10%",
-          right: "5%",
-          width: "400px",
-          height: "400px",
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(212, 150, 14, 0.06) 0%, transparent 70%)",
-          animation: "float 6s ease-in-out infinite",
-          zIndex: 1,
-        }}
-      />
-      <div
-        style={{
-          position: "absolute",
-          bottom: "15%",
-          left: "2%",
-          width: "250px",
-          height: "250px",
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(212, 150, 14, 0.04) 0%, transparent 70%)",
-          animation: "float 8s ease-in-out infinite reverse",
-          zIndex: 1,
-        }}
-      />
-
-      {/* Content */}
-      <div className="container" style={{ position: "relative", zIndex: 2 }}>
-        <div style={{ maxWidth: "720px" }}>
-          {/* Badge */}
-          <div
-            className="animate-fade-up"
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: "10px",
-              padding: "8px 20px",
-              background: "rgba(212, 150, 14, 0.08)",
-              border: "1px solid rgba(212, 150, 14, 0.2)",
-              borderRadius: "var(--radius-full)",
-              marginBottom: "28px",
-            }}
-          >
+        >
+          <div className="pill-badge">
             <span
               style={{
                 width: "8px",
                 height: "8px",
                 borderRadius: "50%",
-                background: "var(--gold-400)",
-                animation: "pulse-gold 2s infinite",
+                backgroundColor: "#22c55e",
+                display: "inline-block",
               }}
             />
-            <span
+            <span>{t.hero.badge}</span>
+          </div>
+
+          <div
+            style={{
+              fontSize: "0.85rem",
+              fontWeight: 700,
+              color: "var(--primary-blue)",
+              display: "flex",
+              alignItems: "center",
+              gap: "6px",
+            }}
+          >
+            <span>⚡ {t.hero.emergencyBadge}</span>
+          </div>
+        </div>
+
+        {/* Hero Split Layout */}
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "1.1fr 0.9fr",
+            gap: "48px",
+            alignItems: "center",
+          }}
+          className="hero-split-grid"
+        >
+          {/* Left: Headlines, Price Anchor & Direct Actions */}
+          <div>
+            <h1
               style={{
-                fontSize: "0.8rem",
-                fontWeight: 600,
-                letterSpacing: "1.5px",
-                textTransform: "uppercase",
-                color: "var(--gold-400)",
+                fontSize: "clamp(2rem, 4.2vw, 3.2rem)",
+                fontWeight: 800,
+                color: "var(--text-main)",
+                lineHeight: 1.2,
+                marginBottom: "16px",
+                letterSpacing: "-0.5px",
               }}
             >
-              Serving Dammam, Saudi Arabia
-            </span>
-          </div>
+              {t.hero.headline}
+            </h1>
 
-          {/* Heading */}
-          <h1
-            className="animate-fade-up delay-100"
-            style={{
-              fontSize: "clamp(2.5rem, 6vw, 4.2rem)",
-              fontWeight: 800,
-              lineHeight: 1.1,
-              marginBottom: "24px",
-            }}
-          >
-            Expert{" "}
-            <span className="gold-text-shimmer">Repair &amp; Maintenance</span>{" "}
-            Services
-          </h1>
-
-          {/* Description */}
-          <p
-            className="animate-fade-up delay-200"
-            style={{
-              fontSize: "1.15rem",
-              color: "var(--dark-100)",
-              lineHeight: 1.8,
-              marginBottom: "40px",
-              maxWidth: "560px",
-            }}
-          >
-            Professional repair &amp; maintenance services for Air Conditioners,
-            Refrigerators, Washing Machines, and Ovens in Dammam. Quality service you can trust.
-          </p>
-
-          {/* CTA Buttons */}
-          <div
-            className="animate-fade-up delay-300"
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              gap: "16px",
-              alignItems: "center",
-            }}
-          >
-            <a
-              href="https://wa.me/message/UZNK27G2N6CIG1"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-whatsapp"
-              id="hero-cta-whatsapp"
+            <p
+              style={{
+                fontSize: "1.1rem",
+                color: "var(--text-muted)",
+                lineHeight: 1.7,
+                marginBottom: "20px",
+                maxWidth: "540px",
+              }}
             >
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+              {t.hero.subheadline}
+            </p>
+
+            {/* Clear Price Anchor Pill */}
+            <div
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                padding: "8px 16px",
+                backgroundColor: "#ecfdf5",
+                border: "1.5px solid #a7f3d0",
+                borderRadius: "var(--radius-md)",
+                marginBottom: "28px",
+              }}
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
               </svg>
-              Book on WhatsApp
-            </a>
-            <a href="#services" className="btn btn-secondary" id="hero-cta-services">
-              Explore Services
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+              <span style={{ fontSize: "0.92rem", fontWeight: 700, color: "#065f46" }}>
+                {t.hero.priceAnchor}
+              </span>
+            </div>
+
+            {/* Clean 2-Choice CTA Buttons */}
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "14px",
+                alignItems: "center",
+                marginBottom: "32px",
+              }}
+            >
+              {/* Primary Call Action */}
+              <a
+                href="tel:+966556906093"
+                className="btn btn-primary-call"
+                style={{
+                  padding: "14px 28px",
+                  fontSize: "1rem",
+                  fontWeight: 700,
+                }}
               >
-                <path d="M5 12h14m-7-7 7 7-7 7" />
-              </svg>
-            </a>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z" />
+                </svg>
+                {t.hero.callNow}
+              </a>
+
+              {/* Secondary WhatsApp Action */}
+              <a
+                href={`https://wa.me/message/UZNK27G2N6CIG1?text=${encodeURIComponent(waMessage)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-whatsapp"
+                style={{
+                  padding: "14px 24px",
+                  fontSize: "1rem",
+                  fontWeight: 700,
+                }}
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
+                {t.hero.whatsappChat}
+              </a>
+            </div>
+
+            {/* 3 Core Trust Pillars */}
+            <div
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                gap: "16px",
+                paddingTop: "20px",
+                borderTop: "1px solid var(--border-light)",
+              }}
+            >
+              <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-muted)" }}>
+                {t.hero.trustPill1}
+              </span>
+              <span style={{ color: "var(--border-focus)" }}>•</span>
+              <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-muted)" }}>
+                {t.hero.trustPill2}
+              </span>
+              <span style={{ color: "var(--border-focus)" }}>•</span>
+              <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-muted)" }}>
+                {t.hero.trustPill3}
+              </span>
+            </div>
           </div>
 
-          {/* Stats */}
-          <div
-            className="animate-fade-up delay-400"
-            style={{
-              display: "flex",
-              gap: "40px",
-              marginTop: "60px",
-              paddingTop: "40px",
-              borderTop: "1px solid rgba(255,255,255,0.06)",
-              flexWrap: "wrap",
-            }}
-          >
-            {[
-              { value: "500+", label: "Happy Customers" },
-              { value: "10+", label: "Years Experience" },
-              { value: "24/7", label: "Support in Dammam" },
-            ].map((stat) => (
-              <div key={stat.label}>
-                <div
-                  className="gold-text"
-                  style={{
-                    fontSize: "2rem",
-                    fontWeight: 800,
-                    fontFamily: "var(--font-heading)",
-                  }}
-                >
-                  {stat.value}
+          {/* Right: Reinstated Real Technician Visual & Streamlined Diagnostics */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+            {/* Real Technician Hero Image Card */}
+            <div
+              className="pro-card"
+              style={{
+                position: "relative",
+                overflow: "hidden",
+                height: "260px",
+                borderRadius: "var(--radius-lg)",
+              }}
+            >
+              <Image
+                src="/hero-technician.jpg"
+                alt="Al Sheikh Certified AC and Appliance Technician in Dammam"
+                fill
+                sizes="(max-width: 960px) 100vw, 500px"
+                style={{ objectFit: "cover", objectPosition: "center 25%" }}
+                priority
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  background:
+                    "linear-gradient(to top, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.2) 60%, transparent 100%)",
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "16px",
+                  insetInlineStart: "16px",
+                  insetInlineEnd: "16px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  color: "#ffffff",
+                }}
+              >
+                <div>
+                  <div style={{ fontSize: "0.95rem", fontWeight: 800 }}>{t.hero.technicianBadge}</div>
+                  <div style={{ fontSize: "0.78rem", color: "#cbd5e1" }}>{t.hero.technicianSub}</div>
                 </div>
-                <div
+                <span
                   style={{
-                    fontSize: "0.85rem",
-                    color: "var(--dark-200)",
-                    marginTop: "4px",
+                    backgroundColor: "rgba(11, 79, 138, 0.9)",
+                    border: "1px solid rgba(255, 255, 255, 0.3)",
+                    padding: "4px 10px",
+                    borderRadius: "var(--radius-full)",
+                    fontSize: "0.75rem",
+                    fontWeight: 700,
                   }}
                 >
-                  {stat.label}
+                  Dammam &amp; Khobar
+                </span>
+              </div>
+            </div>
+
+            {/* Streamlined Diagnostics Widget (Multi-Select Lead Qualifier) */}
+            <div
+              className="pro-card"
+              style={{
+                padding: "20px 22px",
+                backgroundColor: "#ffffff",
+              }}
+            >
+              {/* Header with Title & Price - Never wraps awkwardly */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  marginBottom: "14px",
+                  paddingBottom: "10px",
+                  borderBottom: "1px solid var(--border-light)",
+                  gap: "10px",
+                }}
+              >
+                <div>
+                  <h3
+                    style={{
+                      fontSize: "1.05rem",
+                      fontWeight: 800,
+                      color: "var(--primary-blue)",
+                    }}
+                  >
+                    ⚡ {t.diagnostic.title}
+                  </h3>
+                </div>
+                <span
+                  className="pill-price"
+                  style={{ whiteSpace: "nowrap", flexShrink: 0 }}
+                >
+                  {t.diagnostic.priceVal}
+                </span>
+              </div>
+
+              {/* Step 1: Appliance Selector */}
+              <div style={{ marginBottom: "14px" }}>
+                <label
+                  style={{
+                    display: "block",
+                    fontSize: "0.78rem",
+                    fontWeight: 700,
+                    color: "var(--text-subtle)",
+                    marginBottom: "6px",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {t.diagnostic.step1}
+                </label>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(4, 1fr)",
+                    gap: "6px",
+                  }}
+                >
+                  {["ac", "fridge", "washer", "oven"].map((key) => {
+                    const isSelected = selectedAppliance === key;
+                    return (
+                      <button
+                        key={key}
+                        onClick={() => handleApplianceChange(key)}
+                        style={{
+                          padding: "8px 4px",
+                          borderRadius: "var(--radius-md)",
+                          border: isSelected
+                            ? "2px solid var(--primary-blue)"
+                            : "1px solid var(--border-light)",
+                          backgroundColor: isSelected ? "var(--primary-blue-light)" : "var(--bg-slate)",
+                          color: isSelected ? "var(--primary-blue)" : "var(--text-main)",
+                          fontSize: "0.82rem",
+                          fontWeight: 700,
+                          cursor: "pointer",
+                          transition: "all 0.15s ease",
+                        }}
+                      >
+                        {t.diagnostic.appliances[key]}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
-            ))}
+
+              {/* Step 2: What's the problem? (Multi-select Checkboxes) */}
+              <div style={{ marginBottom: "16px" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: "6px",
+                  }}
+                >
+                  <label
+                    style={{
+                      fontSize: "0.78rem",
+                      fontWeight: 700,
+                      color: "var(--text-subtle)",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {t.diagnostic.step2}
+                  </label>
+                  {selectedFaults.length > 0 && (
+                    <span
+                      style={{
+                        fontSize: "0.72rem",
+                        color: "var(--primary-blue)",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {selectedFaults.length} {lang === "ar" ? "محدد" : "selected"}
+                    </span>
+                  )}
+                </div>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
+                  {faultsList.map((fault) => {
+                    const isChecked = selectedFaults.includes(fault.id);
+                    return (
+                      <button
+                        key={fault.id}
+                        type="button"
+                        onClick={() => handleToggleFault(fault.id)}
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "10px",
+                          padding: "9px 12px",
+                          borderRadius: "var(--radius-sm)",
+                          border: isChecked
+                            ? "1.5px solid var(--primary-blue)"
+                            : "1px solid var(--border-light)",
+                          backgroundColor: isChecked ? "#f0f9ff" : "#ffffff",
+                          color: isChecked ? "var(--primary-blue-dark)" : "var(--text-muted)",
+                          fontSize: "0.85rem",
+                          fontWeight: isChecked ? 700 : 500,
+                          cursor: "pointer",
+                          textAlign: isRTL ? "right" : "left",
+                          transition: "all 0.15s ease",
+                          width: "100%",
+                        }}
+                      >
+                        {/* Square Checkbox Indicator */}
+                        <span
+                          style={{
+                            width: "16px",
+                            height: "16px",
+                            borderRadius: "4px",
+                            border: isChecked
+                              ? "1.5px solid var(--primary-blue)"
+                              : "1.5px solid var(--border-focus)",
+                            backgroundColor: isChecked ? "var(--primary-blue)" : "#ffffff",
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            flexShrink: 0,
+                            transition: "all 0.15s ease",
+                          }}
+                        >
+                          {isChecked && (
+                            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#ffffff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                          )}
+                        </span>
+                        <span style={{ flexGrow: 1 }}>{fault.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Step 3: Fast WhatsApp Dispatch Button */}
+              <a
+                href={`https://wa.me/message/UZNK27G2N6CIG1?text=${encodeURIComponent(waMessage)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn btn-whatsapp"
+                style={{
+                  width: "100%",
+                  padding: "12px 18px",
+                  fontSize: "0.95rem",
+                  fontWeight: 700,
+                  justifyContent: "center",
+                  borderRadius: "var(--radius-md)",
+                  marginBottom: "8px",
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+                </svg>
+                <span>{t.diagnostic.cta}</span>
+              </a>
+
+              {/* Emergency Call Secondary Text */}
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "6px",
+                  fontSize: "0.82rem",
+                  color: "var(--text-subtle)",
+                }}
+              >
+                <span>{t.diagnostic.urgentHelp}</span>
+                <a
+                  href="tel:+966556906093"
+                  style={{
+                    color: "var(--primary-blue)",
+                    fontWeight: 700,
+                    textDecoration: "underline",
+                  }}
+                >
+                  {t.diagnostic.callDirect}
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Scroll Indicator */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "40px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "8px",
-          animation: "float 3s ease-in-out infinite",
-          zIndex: 2,
-        }}
-      >
-        <span
-          style={{
-            fontSize: "0.7rem",
-            letterSpacing: "2px",
-            textTransform: "uppercase",
-            color: "var(--dark-300)",
-          }}
-        >
-          Scroll
-        </span>
-        <div
-          style={{
-            width: "1px",
-            height: "30px",
-            background:
-              "linear-gradient(to bottom, var(--gold-400), transparent)",
-          }}
-        />
-      </div>
+      <style jsx>{`
+        @media (max-width: 960px) {
+          .hero-split-grid {
+            grid-template-columns: 1fr !important;
+            gap: 36px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }
