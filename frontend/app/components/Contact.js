@@ -251,7 +251,7 @@ export default function Contact() {
               </span>
             </div>
             <span style={{ fontSize: "0.82rem", color: "var(--text-subtle)", fontWeight: 600 }}>
-              {isRTL ? "١٨ شارع السوق، الدمام ٣٢٢٤٢" : "18th St, Al Souq, Dammam 32242"}
+              {isRTL ? "شارع ابن بطوطة، الظهران" : "Ibn Batuta Street, Dhahran"}
             </span>
           </div>
           <div style={{ position: "relative", width: "100%", height: "340px" }}>
@@ -263,7 +263,7 @@ export default function Contact() {
               loading="lazy"
               allowFullScreen
               referrerPolicy="no-referrer-when-downgrade"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d114389.2848243615!2d50.045050518349275!3d26.432800539358245!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3e49e29a997ef2b7%3A0x867083049d53c2ee!2sDammam%20Saudi%20Arabia!5e0!3m2!1sen!2ssa!4v1710500000000!5m2!1sen!2ssa"
+              src="https://maps.google.com/maps?q=Ibn%20Batuta%20Street%2C%20Dhahran%2C%20Saudi%20Arabia&z=15&output=embed"
             />
           </div>
         </div>

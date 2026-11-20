@@ -49,16 +49,10 @@ const localBusinessSchema = {
   "image": "https://alsheikh-cooling.com/hero-technician.jpg",
   "address": {
     "@type": "PostalAddress",
-    "streetAddress": "18th Street, Al Souq District",
-    "addressLocality": "Dammam",
+    "streetAddress": "Ibn Batuta Street",
+    "addressLocality": "Dhahran",
     "addressRegion": "Eastern Province",
-    "postalCode": "32242",
     "addressCountry": "SA",
-  },
-  "geo": {
-    "@type": "GeoCoordinates",
-    "latitude": 26.4328,
-    "longitude": 50.1036,
   },
   "areaServed": [
     { "@type": "City", "name": "Dammam" },

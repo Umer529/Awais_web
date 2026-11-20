@@ -188,14 +188,14 @@ export const translations = {
       whatsappCardDesc: "Send us a photo or voice note describing your appliance issue.",
       whatsappBtn: "Chat on WhatsApp",
       shopCardTitle: "Service Center & Workshop",
-      shopAddress: "18th Street, Al Souq District, Dammam 32242, Saudi Arabia",
+      shopAddress: "Ibn Batuta Street, Dhahran, Saudi Arabia",
       shopCardDesc: "Serving all residential neighborhoods in Dammam & Dhahran.",
       hours: "Daily: 8:00 AM – 11:00 PM (24/7 Emergency Calls)",
     },
     footer: {
       brandDesc:
         "Al Sheikh Cooling & Appliances — your dependable home appliance repair partner in Dammam and Dhahran. Fast dispatch, certified technicians, 30-day warranty.",
-      address: "18th Street, Al Souq District, Dammam 32242, Saudi Arabia",
+      address: "Ibn Batuta Street, Dhahran, Saudi Arabia",
       phone: "+966 55 690 6093",
       copyright: "All rights reserved.",
       coverage: "Serving all districts in Dammam & Dhahran, Eastern Province, Saudi Arabia.",
@@ -390,14 +390,14 @@ export const translations = {
       whatsappCardDesc: "أرسل لنا رسالة أو صورة للجهاز أو تسجيلاً صوتياً بالمشكلة.",
       whatsappBtn: "محادثة عبر واتساب",
       shopCardTitle: "مركز الصيانة والورشة",
-      shopAddress: "شارع ١٨، حي السوق، الدمام ٣٢٢٤٢، المملكة العربية السعودية",
+      shopAddress: "شارع ابن بطوطة، الظهران، المملكة العربية السعودية",
       shopCardDesc: "نخدم جميع الأحياء والمجمعات السكنية في الدمام والظهران.",
       hours: "يومياً: من ٨:٠٠ صباحاً حتى ١١:٠٠ مساءً (طوارئ على مدار الساعة)",
     },
     footer: {
       brandDesc:
         "مركز الشيخ للتبريد وصيانة الأجهزة المنزلية — شريكك الموثوق بالدمام والظهران. وصول سريع، فنيون معتمدون، وضمان كتابي ٣٠ يوماً.",
-      address: "شارع ١٨، حي السوق، الدمام ٣٢٢٤٢، المملكة العربية السعودية",
+      address: "شارع ابن بطوطة، الظهران، المملكة العربية السعودية",
       phone: "٠٥٥٦٩٠٦٠٩٣",
       copyright: "جميع الحقوق محفوظة.",
       coverage: "نغطي كافة أحياء الدمام والظهران والمنطقة الشرقية بالمملكة العربية السعودية.",
